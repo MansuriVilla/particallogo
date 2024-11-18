@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ParticleSlider</title>
+    <link rel="shortcut icon" href="favicon.jpg" type="image/x-icon" />
+    <!-- <link rel="apple-touch-icon" href="favicon.jpg"> -->
+    <link rel="shortcut icon" href="favicon.jpg" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="favicon.jpg" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      .draw {
+        position: absolute;
+        z-index: 1;
+      }
+
+      @media only screen and (max-width: 520px) and (min-width: 220px) {
+        .draw {
+          z-index: -1;
+        }
+      }
+    </style>
+  </head>
+
+  <body id="particle-slider">
+    <div class="slides">
+      <div
+        id="first-slide"
+        class="slide"
+        data-src="t-amp-logo-01-white.png"
+      ></div>
+    </div>
+    <customhtml>
+      <script>
+        function changeColour() {
+          var arrayColours = [
+            "#BCFF84",
+            "#FF73D6",
+            "#9973FF",
+            "#FFE280",
+            "#FFAC60",
+            "#70F9FF",
+            "#FFFFFF",
+          ];
+
+          function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+          }
+
+          var elem = document.createElement("div");
+          elem.style = `position:absolute;width:100%;height:100%;opacity:1;background: ${
+            arrayColours[getRandomInt(7)]
+          }; mix-blend-mode: darken;`;
+          document.body.appendChild(elem);
+        }
+
+        changeColour();
+      </script>
+    </customhtml>
+    <canvas class="draw"></canvas>
+    <script>
+      var init = function () {
+        function changeImageBasedOnScreenSize() {
+          var slide = document.getElementById("first-slide");
+          if (window.innerWidth <= 768 && window.innerWidth > 520) {
+            slide.dataset.src = "t-amp-logo-01-white.png";
+          } else if (window.innerWidth <= 520) {
+            slide.dataset.src = " m-amp-logo-01-white.png";
+          } else if (window.innerWidth <= 420) {
+            slide.dataset.src = " m-amp-logo-01-whiteu.png";
+          } else if (window.innerWidth <= 390) {
+            slide.dataset.src = " m-amp-logo-01-whitem.png";
+          } else {
+            slide.dataset.src = "amp-logo.webp";
+          }
+        }
+
+        // // Call the function on page load and resize
+        window.onload = changeImageBasedOnScreenSize;
+        window.onresize = changeImageBasedOnScreenSize;
+
+        changeImageBasedOnScreenSize();
+
+        var isMobile =
+          navigator.userAgent &&
+          navigator.userAgent.toLowerCase().indexOf("mobile") >= 1;
+        var isSmall = window.innerWidth < 1000;
+
+        var ps = new ParticleSlider({
+          ptlGap: isMobile || isSmall ? 0 : 0,
+          ptlSize: isMobile || isSmall ? 1 : 1,
+          width: 1e9,
+          height: 1e9,
+        });
+
+        window.addEventListener
+          ? window.addEventListener(
+              "click",
+              function () {
+                ps.init(true);
+              },
+              false
+            )
+          : (window.onclick = function () {
+              dfs;
+              ps.init(true);
+            });
+
+        window.addEventListener
+          ? window.addEventListener(
+              "touchstart",
+              function () {
+                ps.init(true);
+              },
+              false
+            )
+          : (window.ontouchstart = function () {
+              ps.init(true);
+            });
+      };
+
+      var initParticleSlider = (function () {
+        var psScript = document.createElement("script");
+        psScript.addEventListener
+          ? psScript.addEventListener("load", init, false)
+          : (psScript.onload = init);
+        psScript.src =
+          "https://s3-us-west-2.amazonaws.com/s.cdpn.io/23500/ps-0.9.js";
+        psScript.setAttribute("type", "text/javascript");
+        document.body.appendChild(psScript);
+      })(
+        window.addEventListener
+          ? window.addEventListener("load", initParticleSlider, false)
+          : (window.onload = initParticleSlider)
+      );
+    </script>
+  </body>
+</html>
